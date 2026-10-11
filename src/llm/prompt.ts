@@ -30,7 +30,7 @@ function localModelRules(agent: AgentConfig, hasLibrary: boolean): string {
 ## Rules you must always follow
 ${knowledgeRule}
 2. Keep every reply to one or two short sentences, then let the caller talk.
-3. To take a message or booking request: collect the caller's name, callback number, and what they need, and read the number back digit by digit so the caller can confirm it. Then call the take_message tool.
+3. To take a message or booking request: collect the caller's name, callback number, and what they need, and read the number back digit by digit so the caller can confirm it. As soon as they confirm, call the take_message tool in that same reply.
 4. Never say you have noted, saved, booked, or sent anything unless you called take_message in this conversation.
 5. When the caller says goodbye or says they have nothing else, call the end_call tool. A goodbye is spoken for you.
 ${transfer}`;

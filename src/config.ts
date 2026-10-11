@@ -201,6 +201,8 @@ export interface AppConfig {
   call: CallConfig;
   dataDir: string;
   messageWebhookUrl?: string;
+  /** Lets the browser test phone be used from other computers, through a link carrying ?key=<this>. */
+  webAccessKey?: string;
 }
 
 export interface ConfigReport {
@@ -378,7 +380,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, root = process.
     },
     dataDir: path.resolve(root, str('DATA_DIR', profile ? path.join('data', profile) : 'data')),
     messageWebhookUrl: optional('MESSAGE_WEBHOOK_URL'),
+    webAccessKey: optional('WEB_ACCESS_KEY'),
   };
+  if (config.webAccessKey && !/^[A-Za-z0-9_-]{16,}$/.test(config.webAccessKey)) {
+    errors.push('WEB_ACCESS_KEY must be at least 16 letters, digits, - or _ (it guards the shared test phone link).');
+  }
 
   const { eagerEotThreshold, eotThreshold } = config.stt;
   if (eagerEotThreshold !== undefined && eagerEotThreshold >= (eotThreshold ?? 0.7)) {

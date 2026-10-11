@@ -68,6 +68,7 @@ Keywords: bess, b e s s, battery energy storage, energy storage system, ess, sto
 ## Sungrow PowerTitan 3.0 (utility storage, launched 2025)
 Keywords: powertitan, power titan, powertitan 3.0, utility storage, grid storage, big battery, container, mwh, 684 ah, liquid cooled, silicon carbide, sic, ac block
 - Launched on 6 June 2025 in Hefei and shown at SNEC 2025. Three container sizes: 10-foot 3.45 MWh, 20-foot 6.9 MWh, and 30-foot 12.5 MWh. Four 30-foot units make a 12.5 MW, 50 MWh AC block, for 2 to 12 hours of storage.
+- The largest unit is the 30-foot container with 12.5 MWh; the smallest is the 10-foot with 3.45 MWh.
 - Uses 684 Ah stacked LFP cells (448 Wh per litre, over 15,000 cycles) and a fully liquid-cooled silicon carbide PCS of 450 kW per unit, with 99.3% maximum efficiency and 93.5% system round-trip efficiency, at full power up to 55°C.
 - Works from minus 40 to plus 55°C, and up to 5,000 metres without derating. Over 500 kWh per square metre: Sungrow says a 1 GWh plant needs 45% less land.
 - Safety: Thermo-Electric Separation keeps heat and gases from a failing cell away from the electronics and neighbouring cells.
@@ -77,6 +78,7 @@ Keywords: powertitan, power titan, powertitan 3.0, utility storage, grid storage
 ## Sungrow PowerTitan 2.0 and 1.0
 Keywords: powertitan 2.0, power titan 2, st5015ux, 5 mwh, 314 ah, previous storage, older storage, powertitan 1.0, st2752ux, st2236ux, sc5000ud, pcs, ems3000, isolarinsight
 - PowerTitan 2.0 (ST5015UX): 5 MWh (5,015 kWh) in a 20-foot container, with the PCS built in: 2.5 MW for a 2-hour system or 1.25 MW for 4 hours. 314 Ah LFP cells, liquid cooling, IP55, and separate electrical and battery cabinets.
+- The newer PowerTitan 3.0 (2025) is bigger: up to 12.5 MWh in one 30-foot container.
 - PowerTitan 1.0 (ST2752UX and ST2236UX) is the earlier liquid-cooled battery unit, used with Sungrow's SC-series PCS, for example in Tata Power's Ladakh project.
 - Plant control uses Sungrow's EMS3000 energy management system and iSolarInsight monitoring.
 - Example projects: Bramley, UK, 100 MW / 331 MWh and Uzbekistan 150 MW / 300 MWh with PowerTitan 2.0; Chile 76 MW / 418 MWh with PowerTitan 1.0.
@@ -101,7 +103,7 @@ Keywords: commercial storage, c&i storage, business battery, factory battery, in
 - Uses: cutting peak demand charges, using more of your own solar, backup instead of a diesel generator, and running at night.
 
 ## Home battery choices and backup time
-Keywords: home battery, house battery, battery backup, backup time, how long, hours of backup, battery size, which battery, sbr, sbh, mbl, mgl, 48 v, high voltage battery, low voltage battery, inverter battery, ups
+Keywords: home battery, house battery, battery backup, backup time, backup last, backup hours, power cut, outage, run my, run the, how long, hours of backup, battery size, which battery, sbr, sbh, mbl, mgl, 48 v, high voltage battery, low voltage battery, inverter battery, ups
 - High-voltage Sungrow batteries go with the SH hybrids: SBR (3.2 kWh modules, 6.4 to 25.6 kWh per stack) and SBH (5 kWh modules, 10 to 40 kWh). They are efficient and compact.
 - 48 V low-voltage batteries go with the MG hybrids: MGL060 (6 kWh, up to 16 in parallel for 96 kWh) and MBL050, MBL120, MBL160 (about 5, 12, and 16 kWh, up to 20 in parallel). MG hybrids can also use other brands, including lead-acid.
 - PowerHarbor uses stackable 6, 9, or 10 kWh blocks.
@@ -229,6 +231,13 @@ Keywords: panel, panels, module, modules, topcon, perc, hjt, heterojunction, bif
 - Bifacial panels also collect light on their back, adding about 5 to 15% on light-coloured roofs or raised structures.
 - In hot places like Tamil Nadu, the temperature coefficient matters: n-type TOPCon and HJT lose less output in heat than PERC.
 - Panels sold today are typically 540 to 620 W, with 25 to 30-year performance warranties. Sungrow doesn't make panels; its inverters work with all major panel brands.
+
+## How long solar equipment lasts
+Keywords: lifespan, life, lifetime, durable, durability, years, how many years, replace, replacement, age, old, wear out
+- Solar panels last 25 years or more, with performance warranties of 25 to 30 years. They lose a little output each year, usually under 1% a year.
+- (Backup time during a power cut is different: it depends on the battery size and the load.)
+- Inverters typically last 10 to 15 years or more; Sungrow's warranty length depends on the model and is confirmed by the Sunbridger team.
+- LFP batteries last about 6,000 to over 10,000 cycles, roughly 15 years of daily use; Sungrow SBR and SBH batteries have a 10-year warranty. Lead-acid batteries last only a few years.
 
 ## Inverter types
 Keywords: inverter types, types of inverter, string inverter, central inverter, micro inverter, microinverter, off grid inverter, solar inverter vs home ups, difference between inverters, which inverter, single phase vs three phase

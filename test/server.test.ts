@@ -186,6 +186,29 @@ test('an unanswered transfer brings the caller back to the agent', async () => {
   }
 });
 
+test('a shared link with the access key opens the test phone from another computer', async () => {
+  const key = 'k3y-for-the-test-phone-123';
+  const srv = await startServer([], { WEB_ACCESS_KEY: key });
+  const remote = { 'X-Forwarded-For': '203.0.113.9', 'X-Forwarded-Proto': 'https' };
+  try {
+    const wrong = await fetch(`${srv.base}/?key=wrong-key-wrong-key`, { headers: remote });
+    assert.equal(await wrong.text(), 'Voice agent is running.');
+    const page = await fetch(`${srv.base}/?key=${key}`, { headers: remote });
+    assert.match(await page.text(), /Voice Agent/);
+    const cookie = (page.headers.get('set-cookie') ?? '').split(';')[0];
+    assert.equal(cookie, `test_phone_key=${key}`);
+    assert.match(page.headers.get('set-cookie') ?? '', /HttpOnly.*Secure.*SameSite=Strict/i);
+    const session = await fetch(`${srv.base}/web/session`, { method: 'POST', headers: { ...remote, cookie } });
+    assert.equal(session.status, 200);
+    const script = await fetch(`${srv.base}/app.js`, { headers: { ...remote, cookie } });
+    assert.equal(script.status, 200);
+    const noCookie = await fetch(`${srv.base}/web/session`, { method: 'POST', headers: remote });
+    assert.equal(noCookie.status, 404);
+  } finally {
+    await srv.shutdown();
+  }
+});
+
 test('the browser test page is only served locally', async () => {
   const srv = await startServer([]);
   try {

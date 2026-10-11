@@ -78,6 +78,26 @@ During a call, the local model also gets a tiny request every 1.5 seconds while 
 
 For the lowest latency, keep the laptop plugged in and set Windows to the *Best performance* power mode: on battery the GPU is power-limited and slower. On a server, put it close to Deepgram and Twilio, in the US.
 
+## Run it in the cloud (works when your PC is off)
+
+`render.yaml` deploys the Sunbridger agent to [Render](https://render.com). The cloud server has no GPU, so it uses Claude (`claude-opus-5-5`, effort `low`) instead of the local model.
+
+1. Get a Claude API key at [platform.claude.com](https://platform.claude.com) (separate from a Claude Pro subscription; add a little billing credit).
+2. Open **https://render.com/deploy?repo=https://github.com/kowshickj-git/Voice-agent**, sign in with GitHub, and paste your `DEEPGRAM_API_KEY` and `ANTHROPIC_API_KEY` when asked. Render generates `WEB_ACCESS_KEY` for you.
+3. When the deploy finishes, open the service's **Environment** tab, copy `WEB_ACCESS_KEY`, and share `https://<your-service>.onrender.com/?key=<WEB_ACCESS_KEY>`.
+
+Notes: the free plan sleeps after 15 idle minutes, and the next visit takes about a minute to wake it (the paid *Starter* plan stays awake). The cloud disk is wiped on restarts, so set `MESSAGE_WEBHOOK_URL` to receive saved messages. The same URL can be your Twilio webhook (`https://<your-service>.onrender.com/twilio/voice`) for a real phone number.
+
+## Share the test phone as a link
+
+The browser test phone normally works only on this computer, because every call uses your Deepgram credit and your GPU. To let someone else try it:
+
+1. Set `WEB_ACCESS_KEY` in `.env` to a long random value, then restart the agent.
+2. Open a free Cloudflare tunnel (no account needed) with [cloudflared](https://github.com/cloudflare/cloudflared/releases): `cloudflared tunnel --url http://localhost:8081`. It prints an address like `https://random-words.trycloudflare.com`.
+3. Share `https://random-words.trycloudflare.com/?key=YOUR_KEY`. Visitors without the key only see "Voice agent is running."
+
+The address changes every time the tunnel restarts, and the link stops working when you close the tunnel window or your PC sleeps.
+
 ## Connect a real phone number (Twilio)
 
 1. **Get a Twilio number** with voice capability (Twilio Console → Phone Numbers → Buy a number). Some countries require address or business verification first.
@@ -161,6 +181,17 @@ npm run doctor:sungrow     # check its settings and services
 - For the most reliable answers to unusual questions, give just this agent Claude: put `LLM_PROVIDER=anthropic` and `ANTHROPIC_API_KEY` in `agents/sungrow/agent.env`.
 
 In testing with the local model, it answered over 60 typical questions about the brand, products, storage, technologies, subsidies, net metering, and sizing correctly. On live test calls, replies started about 0.6–1 s after the caller finished (slower on battery power), and about 3–4 s on turns where it saved a message. It still sometimes guesses yes-or-no answers about Sunbridger itself (for example "Are you open on Sunday?") until those details are in the knowledge base.
+
+### Test the agent with a question bank
+
+`agents/sungrow/eval.json` holds about 200 caller questions, from "What is a BESS?" to "Tell me about the SH8.0RS" (a made-up model the agent must not describe), plus multi-turn conversations that must end with a saved message. Each question lists what the answer has to contain and what it must never say. Run them all through the agent, the way a call would:
+
+```bash
+npm run eval:sungrow                          # all questions, about 10 minutes on a 6 GB GPU
+npm run eval:sungrow -- --only=storage        # one category
+```
+
+It prints each failure with what the caller would have heard, a score per category, and saves a full report in `data/sungrow/eval/`. When an answer is wrong, fix the fact in `knowledge.md` or `library.md` (not the model) and run it again. That's how this agent is "trained": its facts live in files you can read and correct, so it doesn't invent specs the way a retrained model can. Any agent can have an `eval.json` next to its knowledge base.
 
 ### Knowledge library: more facts than fit in a prompt
 

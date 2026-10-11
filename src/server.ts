@@ -89,8 +89,25 @@ export function createServer(deps: ServerDeps) {
     res.status(403).type('text/plain').send('Invalid Twilio signature');
   };
 
+  // The browser test phone starts calls that use your Deepgram credit and model, so it's served
+  // only on this machine, or to links carrying WEB_ACCESS_KEY (kept afterwards in a cookie).
+  const KEY_COOKIE = 'test_phone_key';
+  const sameKey = (given: string | undefined): boolean => {
+    const key = config.webAccessKey;
+    if (!key || !given) return false;
+    const a = Buffer.from(given);
+    const b = Buffer.from(key);
+    return a.length === b.length && crypto.timingSafeEqual(a, b);
+  };
+  const cookieKey = (req: Request): string | undefined =>
+    (req.get('cookie') ?? '')
+      .split(';')
+      .map((c) => c.trim().split('='))
+      .find(([name]) => name === KEY_COOKIE)?.[1];
+  const canUseTestPhone = (req: Request): boolean => isLocalRequest(req) || sameKey(cookieKey(req));
+
   const localOnly = (req: Request, res: Response, next: NextFunction) => {
-    if (isLocalRequest(req)) return next();
+    if (canUseTestPhone(req)) return next();
     res.status(404).type('text/plain').send('Not found');
   };
 
@@ -162,9 +179,14 @@ export function createServer(deps: ServerDeps) {
     res.send(connectStreamTwiml(streamUrl(req), token, `${baseUrl(req)}/twilio/after-stream`));
   });
 
-  // Browser test phone (only from this machine).
+  // Browser test phone (this machine, or a shared link with the access key).
   app.get('/', (req, res) => {
-    if (isLocalRequest(req)) res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
+    const key = typeof req.query.key === 'string' ? req.query.key : undefined;
+    if (sameKey(key)) {
+      res.cookie(KEY_COOKIE, key, { httpOnly: true, secure: req.secure || baseUrl(req).startsWith('https'), sameSite: 'strict', maxAge: 30 * 24 * 3600_000 });
+      log.info('Browser test phone opened from a shared link');
+    }
+    if (sameKey(key) || canUseTestPhone(req)) res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
     else res.type('text/plain').send('Voice agent is running.');
   });
   app.get('/web/info', localOnly, (_req, res) => {

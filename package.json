@@ -13,6 +13,8 @@
     "dev": "tsx watch src/index.ts",
     "doctor": "tsx src/doctor.ts",
     "doctor:sungrow": "tsx src/doctor.ts --agent=sungrow",
+    "eval": "tsx src/eval.ts",
+    "eval:sungrow": "tsx src/eval.ts --agent=sungrow",
     "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test --test-timeout=20000 test/config.test.ts test/mulaw.test.ts test/sentenceChunker.test.ts test/speechText.test.ts test/twilioSignature.test.ts test/conversation.test.ts test/callSession.test.ts test/server.test.ts test/ollama.test.ts test/tools.test.ts test/library.test.ts"
   },
