@@ -95,7 +95,7 @@ async function warmLocalModel(cfg: AppConfig, logger: Logger): Promise<void> {
     const systemPrompt = buildSystemPrompt(cfg.agent, cfg.llm.provider);
     const sizeWarning = promptSizeWarning(systemPrompt, cfg.llm.contextTokens);
     if (sizeWarning) logger.warn(sizeWarning);
-    const brain = createBrain(cfg.llm, systemPrompt, buildTools({ transferEnabled: Boolean(cfg.agent.transferNumber) }));
+    const brain = createBrain(cfg.llm, systemPrompt, buildTools({ transferEnabled: Boolean(cfg.agent.transferNumber), solarEstimator: cfg.agent.solarEstimator }));
     const started = Date.now();
     await brain.prewarm();
     logger.info(`Local model ${model} is loaded (${((Date.now() - started) / 1000).toFixed(1)} s)`);

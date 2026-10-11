@@ -328,3 +328,132 @@ Keywords: meaning, what does it mean, full form, stands for, glossary, term, ter
 - BMS is the battery management system, PCS the power conversion system, EMS the energy management system, and HEMS a home energy management system.
 - LCOE and LCOS are the lifetime cost per unit of solar energy and of stored energy. CUF (capacity utilization factor) is the share of the year's maximum possible output a plant actually produces, about 17 to 20% for solar in India.
 - A VPP (virtual power plant) links many home batteries so they act together for the grid.
+
+## Sungrow inverter error codes (home models)
+Keywords: error, error code, code, fault, fault code, alarm, warning, red light, red led, 002, 003, 004, 008, 009, 010, 012, 014, 037, 039, 106, grid overvoltage, grid undervoltage, overfrequency, underfrequency, islanding, grid outage, leakage current, insulation, iso fault, grounding fault, over temperature, inverter stopped, tripping, trips
+- Common fault codes on Sungrow home inverters (the exact wording can differ by model; the app or the inverter's screen shows the text):
+- 002 and 014: grid voltage too high (014 is the 10-minute average). Common in the afternoon when many rooftops export on a weak line. 004: grid voltage too low. 008 and 009: grid frequency too high or too low.
+- 010: grid power outage. On an on-grid inverter this is normal during a power cut; it restarts by itself a short while after the power comes back.
+- 012: leakage current too high. 039: low insulation resistance, often after rain from a damaged cable or a wet connector. If it clears when things dry but keeps coming back, a technician must check the wiring.
+- 037: inverter too hot; it needs shade and space for air around it. 106: earthing (grounding) fault; the earth connection must be checked.
+- For any code: note the number, check whether it repeats, and the Sunbridger team will call back. Never open the inverter.
+
+## Grid voltage tripping in the afternoon
+Keywords: high voltage, overvoltage, voltage high, voltage rise, tripping, trips, keeps tripping, stops at noon, afternoon, weak grid, transformer, eb voltage, 250 v, 260 v, cable size, line voltage
+- When the local line's voltage rises above the safe limit, the inverter must stop, by law, to protect the grid. This is the most common reason a working system stops at midday: generation is highest then, and many rooftops on one transformer push the voltage up.
+- Signs: codes 002 or 014, and generation that drops to zero around noon and then recovers.
+- Fixes: a thicker cable from the inverter to the meter, a complaint to TNPDCL to check the transformer tap or the line, or, only by an authorised installer, settings allowed by the grid rules. Never change grid protection settings yourself.
+
+## Low generation: what to check
+Keywords: low generation, less generation, low output, less units, generation dropped, not generating, zero generation, output low, poor performance, units reduced, half generation, one string, string fault
+- First compare with the weather: cloudy and rainy days, especially in the October to December monsoon, can halve generation.
+- Then check: dust on the panels (it can cut output by 5 to 15% or more), new shade from trees, a water tank, or a new building, the inverter showing a fault code, a tripped breaker or DC isolator, and the midday voltage tripping described in its own section.
+- In iSolarCloud, a string that produces much less than the others points to a loose connector or a damaged panel. Business models can run an I-V curve scan to find it.
+- If nothing obvious shows up, the Sunbridger team can arrange a check; take a message with the inverter model and what the app shows.
+
+## iSolarCloud setup and the WiNet-S Wi-Fi dongle
+Keywords: wifi, wi-fi, wlan, winet, winet-s, dongle, stick, router, internet, offline, not online, connect app, setup app, configure, change wifi password, new router, isolarcloud login, account, register, add plant, bluetooth, ethernet, lan, 2.4 ghz, 5 ghz
+- Sungrow home inverters connect to the internet through a small communication module, the WiNet-S, which plugs into the inverter and supports Wi-Fi and Ethernet cable.
+- The WiNet-S uses 2.4 GHz Wi-Fi, not 5 GHz. A weak signal at the inverter is the usual reason the app shows offline; a Wi-Fi extender or an Ethernet cable fixes it.
+- After a new router or a changed Wi-Fi password, the dongle has to be given the new details again: in the iSolarCloud app, connect the phone to the dongle's own Wi-Fi hotspot and enter the new network. The installer or the Sunbridger team can do it.
+- The plant is normally registered in iSolarCloud by the installer at commissioning; the owner gets a login to see it.
+
+## Smart meter, export limit, and zero export
+Keywords: smart meter, energy meter, ct, current transformer, dtsu666, ddsu666, export limit, export limitation, zero export, no export, feed in limit, export control, self consumption, load monitoring, consumption data
+- Sungrow smart meters measure the home's or building's own consumption: the DDSU666 for single-phase and the DTSU666 for three-phase. Hybrids need one to know when to charge and discharge the battery.
+- With a meter, the inverter can limit how much it sends to the grid, down to zero export. That's useful where export isn't allowed, where net metering isn't approved yet, or for business sites with no export permission.
+- The meter also lets iSolarCloud show consumption, not just generation, so the owner can see how much of their solar they use themselves.
+
+## SH or MG: choosing a Sungrow hybrid
+Keywords: sh or mg, sh vs mg, difference between sh and mg, which hybrid, compare hybrid, low voltage vs high voltage, 48 v vs high voltage, lead acid hybrid, existing battery, frequent power cuts, long power cuts, generator, motor, pump backup
+- SH hybrids (SH-RS single-phase, SH-T three-phase) use Sungrow's own high-voltage batteries (SBR or SBH). They are compact and very efficient, with a backup switch in under 10 milliseconds on the SH-RS and 0 milliseconds on the SH-T. A good choice for a clean, all-Sungrow system.
+- MG hybrids (MG RL single-phase, MG TL three-phase) use 48 V batteries, from Sungrow or other brands, even lead-acid. They are built for frequent and long power cuts, give twice the rated power for 10 seconds to start motors and pumps, have a touchscreen, and can run several units in parallel. The MG20TL and MG25TL can also connect a generator.
+- Simple rule: someone who already has batteries, wants lead-acid, or has long daily cuts and motor loads: MG. Someone who wants a compact Sungrow battery system: SH.
+
+## Adding a battery later or upgrading
+Keywords: add battery later, upgrade, upgrade to hybrid, existing system, already have solar, existing on grid, convert on grid to hybrid, retrofit, expand system, add panels, increase capacity, ac coupling, future battery
+- An existing on-grid system can get backup by adding a hybrid inverter with a battery alongside it, or by replacing the inverter with a hybrid. The Sunbridger team checks which suits the existing design.
+- Buying a hybrid now and adding the battery later is a common plan, and Sungrow batteries are stackable, so capacity can grow later: SBR in 3.2 kWh modules, SBH in 5 kWh modules, and the 48 V batteries in parallel.
+- Adding panels later works if the inverter has spare capacity; Sungrow inverters accept panels above their rating, for example up to 200% on the SH-T and 250% on the MG TL.
+
+## Appliance power and backup loads
+Keywords: appliance, appliances, load, loads, watts, how many watts, fan, light, bulb, tube light, fridge, refrigerator, tv, television, ac, air conditioner, 1 ton, 1.5 ton, motor, pump, water pump, 1 hp, mixer, grinder, iron, washing machine, geyser, water heater, induction, microwave, computer, wifi router, can i run ac
+- Typical power: LED bulb 9 to 12 W, tube light about 20 W, ceiling fan 50 to 75 W (BLDC fans about 30 W), TV 60 to 120 W, Wi-Fi router about 10 W, laptop about 60 W, fridge 150 to 250 W while running.
+- Bigger loads: 1 HP water pump about 750 W, 1.5-ton air conditioner about 1.5 kW (inverter ACs less once cool), washing machine about 500 W, mixer or grinder 500 to 750 W, iron about 1,000 W, microwave about 1,200 W, geyser and induction stove about 2,000 W.
+- Motors, pumps, ACs, and fridges draw two to three times more for a moment when starting, so the inverter needs headroom; Sungrow MG hybrids give twice their rating for 10 seconds for this.
+- Running an AC on solar during the day works well; running it on battery all night needs a large battery.
+
+## Tamil Nadu electricity bills and units
+Keywords: bill, eb bill, electricity bill, units, two months, bimonthly, bi-monthly, monthly bill, how to find units, consumer number, service number, service connection, tariff, slab, slabs, 100 units free, free units, domestic tariff, rate per unit, tnpdcl bill
+- Tamil Nadu home electricity bills cover two months. For sizing, halve the units on the bill to get units per month.
+- Homes get the first 100 units of each two-month bill free, and the rate per unit rises in slabs as use goes up, so solar saves the most expensive units first.
+- The service connection number on the bill is needed for the subsidy and net-metering applications.
+- Whether a connection is single-phase or three-phase is shown on the bill and the meter; a three-phase meter has three incoming phases.
+
+## Common caller doubts about solar
+Keywords: doubt, worried, worry, is it worth, worth it, does solar work, rain, cloudy, night, power cut, will it work, chinese, chinese brand, safe, reliable, damage roof, leak, hail, cyclone, maintenance cost, life, how long last
+- Solar works on cloudy days at reduced output, and not at night. At night the home uses the grid, or the battery in a hybrid system.
+- An on-grid system switches off during a power cut, by law, to protect line workers. For backup, a hybrid with a battery is needed.
+- Life: panels last 25 years or more and inverters typically 10 to 15 years or more. Upkeep is mainly cleaning the panels.
+- A well-fixed structure doesn't damage the roof; mounting is designed for wind, which matters for cyclones on the coast.
+- About Sungrow being a Chinese company: it is listed on the stock exchange, has made inverters since 1997, was the world's number one in inverter shipments in 2025, has a factory in Bengaluru, and is ranked number one for bankability by BloombergNEF.
+
+## Why Sungrow, and comparing brands
+Keywords: why sungrow, compare, comparison, versus, vs, other brand, which brand, best brand, huawei, growatt, solis, goodwe, sma, fronius, enphase, havells, luminous, microtek, polycab, deye, better than, cheaper brand, difference
+- Speak well of other brands: never criticise them. Explain Sungrow's strengths instead, and suggest comparing warranty, local service, monitoring, efficiency, and installer support.
+- Sungrow's strengths: an inverter specialist since 1997; the world's number one in solar inverter shipments in 2025 (S&P Global); number one for bankability (BloombergNEF); a factory in Bengaluru since 2018; one brand for inverter, battery, and monitoring app; and a range from small homes to giant solar plants.
+- Product strengths: high efficiency (up to about 98% on homes), fanless quiet home models, AFCI arc protection, PID protection, C5 anti-corrosion for the coast, and free iSolarCloud monitoring.
+- A cheaper quote can mean a different panel, structure, or cable quality; ask the team to compare like with like.
+
+## The steps after deciding on solar
+Keywords: process, steps, procedure, how to start, what next, next steps, site visit, site survey, survey, design, installation, install, how long installation, timeline, commissioning, documents, documents needed, paperwork, order
+- Typical steps: share the electricity bill, a site visit to check the roof, shade, and wiring, the system design and quote, the subsidy and net-meter application, delivery and installation, then commissioning and app setup, TNPDCL inspection and the net meter, and finally the subsidy credited to the bank account.
+- Installing a home system usually takes one to three days once material is on site. The approvals take longer; the team gives current timelines.
+- Documents usually needed: the electricity bill with the service connection number, ID proof, and bank details for the subsidy.
+- To start, the Sunbridger team calls back to arrange it; offer to take a message.
+
+## Where to install the inverter and battery
+Keywords: installation location, where to install, inverter location, mounting, wall, indoor, outdoor, sunlight, direct sun, ventilation, distance, battery location, battery room, height, clearance, noise, bedroom
+- Install the inverter on a solid wall, out of direct sun and rain, with space around it for air, at a height that is easy to see and reach, and close to the main distribution board.
+- Don't put it in a closed, hot room or in a bedroom if it has a fan. Many Sungrow home models are fanless and nearly silent.
+- Batteries like cool, shaded, dry places; heat shortens battery life. Sungrow SBR batteries are IP55 and can go indoors or outdoors.
+- Check that the Wi-Fi signal reaches the inverter for app monitoring.
+
+## Battery care and settings
+Keywords: battery care, battery life, battery health, reserve, backup reserve, soc, state of charge, discharge, depth of discharge, charge from grid, battery settings, battery mode, self consumption mode, battery not charging, battery draining
+- LFP batteries like Sungrow's last longest when kept cool. Lead-acid batteries on MG hybrids should only be drained about halfway and need regular checks.
+- In the app, a backup reserve keeps part of the battery for power cuts instead of using it all every night.
+- Common modes: self-consumption, which stores daytime solar for the evening, and backup priority, which keeps the battery full for cuts. Which suits a customer depends on how often the power goes.
+- If a battery isn't charging, check that the panels are producing more than the home is using, and note any error code for the team.
+
+## Apartments and housing societies
+Keywords: apartment, flat, flats, housing society, society, rwa, residents welfare, group housing, common area, common meter, lift, motor, common facilities, terrace, villa
+- A flat owner usually can't put panels on a shared terrace alone, but the society can install solar for common areas: lifts, pumps, corridor lights, and EV charging.
+- Under PM Surya Ghar, group housing societies and residents' welfare associations get a central subsidy of 18,000 rupees per kW for common facilities, up to 500 kW.
+- Independent houses and villas qualify as normal homes.
+
+## Business solar: tax benefits and finance
+Keywords: depreciation, accelerated depreciation, tax, tax benefit, income tax, gst, business finance, loan, bank loan, emi, opex, capex, resco, ppa, lease
+- Businesses in India can usually claim accelerated depreciation on solar equipment, 40% a year under current income tax rules, which cuts tax in the early years. Their accountant confirms how it applies.
+- Payment models: capex, where the business buys the system, and opex or PPA, where a developer owns it and the business pays per unit.
+- Homes can get bank loans under PM Surya Ghar. For any finance, EMI, or GST question, the Sunbridger team explains the current options.
+
+## Solar pumps and PM-KUSUM for farmers
+Keywords: farmer, farm, agriculture, agricultural, pump, solar pump, irrigation, borewell, kusum, pm kusum, motor, hp, field, krishi
+- PM-KUSUM is the central scheme for farm solar. Component A supports small solar plants on farmland. Component B supports standalone solar pumps for farmers without a grid connection. Component C solarises existing grid-connected farm pumps or whole agricultural feeders.
+- For standalone pumps, the central government typically pays 30% and the state contributes too; the farmer pays the rest. Which components are open in Tamil Nadu now, the Sunbridger team confirms.
+- A 1 HP pump needs about 1 kW of panels; pumps need inverters made for motors.
+
+## Certifications and standards in India
+Keywords: bis, bis certificate, certification, certified, standard, standards, iec, isi, mnre approved, approved inverter, cea regulations, grid code, test report, tuv
+- In India, grid-connected solar inverters must be registered with the Bureau of Indian Standards (BIS) before they can be sold. For a particular model's certificates, the Sunbridger team can confirm.
+- Sungrow products are tested to international IEC safety and grid standards, and its SG110CX had the world's first TÜV SÜD report for DC arc detection under IEC 63027.
+- Net-metered systems in Tamil Nadu also follow TNPDCL's and the state regulator's connection rules, which the installer handles.
+
+## Sungrow history and milestones
+Keywords: history, milestones, timeline, started, since, year, ipo, listed when, chinext, 300274, how old, growth, journey, cao renxian
+- 1997: founded in Hefei, China, by Cao Renxian.
+- 2011: listed on the Shenzhen Stock Exchange's ChiNext board, code 300274.
+- 2018: first factory outside China, in Bengaluru, later expanded to 10 GW a year.
+- 2025: the world's number one in solar inverter shipments, and battery storage became its biggest business with 43 GWh shipped.
+- 2026: PowerMatrix, PowerHarbor, and the MG TL hybrids launched.

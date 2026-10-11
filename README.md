@@ -138,7 +138,7 @@ Also translate the few fixed fallback lines (`PHRASES` at the top of `src/call/C
 
 ## Run more than one agent
 
-Each extra agent lives in its own folder under `agents/`, with its own settings, role, knowledge base, port, and records, and shares the keys and model settings in `.env`. This project includes a second agent: **Ava, the phone assistant for Sunbridger**, Sungrow's distributor and channel partner for Tamil Nadu. It answers questions about Sungrow (the company, its inverters, batteries, battery energy storage systems such as PowerTitan, technologies such as AFCI and grid-forming, and the 2026 launches) and about solar in India and Tamil Nadu (sizing, TNPDCL net metering, the central and state subsidies, ALMM rules, maintenance, batteries), helps callers choose a model, and takes quote and service requests.
+Each extra agent lives in its own folder under `agents/`, with its own settings, role, knowledge base, port, and records, and shares the keys and model settings in `.env`. This project includes a second agent: **Ava, the phone assistant for Sunbridger**, Sungrow's distributor and channel partner for Tamil Nadu. It answers questions about Sungrow (the company, its inverters, batteries, battery energy storage systems such as PowerTitan, technologies such as AFCI and grid-forming, and the 2026 launches) and about solar in India and Tamil Nadu (sizing, TNPDCL net metering, the central and state subsidies, ALMM rules, maintenance, batteries), helps callers choose a model, explains Sungrow error codes and common faults, and takes quote and service requests. Its `solar_estimate` tool works out system size, generation, panels, roof space, subsidy, and the matching Sungrow inverter and battery, so the numbers it speaks are calculated, not guessed.
 
 ```bash
 npm run start:sungrow      # http://localhost:8081 (the dental agent stays on 8080)
@@ -147,10 +147,10 @@ npm run doctor:sungrow     # check its settings and services
 
 | File | What it holds |
 | --- | --- |
-| `agents/sungrow/agent.env` | Name, company, greeting, port 8081, voice (`aura-2-thalia-en`), keyterms, `AGENT_EXPERTISE` |
+| `agents/sungrow/agent.env` | Name, company, greeting, port 8081, voice (`aura-2-thalia-en`), keyterms, `AGENT_EXPERTISE`, `SOLAR_ESTIMATOR` |
 | `agents/sungrow/instructions.md` | Its role: Sunbridger's assistant, how to recommend models and take requests |
 | `agents/sungrow/knowledge.md` | The facts every call needs: Sunbridger, Sungrow, how to choose, home inverter and battery specs, subsidy summary, the complete model list |
-| `agents/sungrow/library.md` | The knowledge library: 44 deeper sections (storage, technologies, business and plant inverters, solar basics, Tamil Nadu rules) looked up per question |
+| `agents/sungrow/library.md` | The knowledge library: 63 deeper sections (storage, technologies, business and plant inverters, error codes and troubleshooting, app and Wi-Fi setup, brand comparisons, solar basics, Tamil Nadu bills and rules, farm and housing-society schemes) looked up per question |
 
 - **Add Sunbridger's own details** (address, phone, hours, services) under "About Sunbridger" in `knowledge.md`. Until then the agent says it doesn't have them and offers a callback.
 - Settings in `agent.env` win for that agent, and it never takes the main agent's port, name, greeting, prompts, records folder, transfer number, webhook, or keyterms from `.env`. Its records go to `data/sungrow/`.
@@ -164,7 +164,7 @@ In testing with the local model, it answered over 60 typical questions about the
 
 ### Knowledge library: more facts than fit in a prompt
 
-Any agent can have a `library.md` next to its `knowledge.md` (or set `AGENT_LIBRARY_FILE`). For each thing the caller says, the server finds the one or two best-matching library sections and adds them to the conversation as reference notes, so the model sees exactly the facts for that question. That keeps the always-on prompt small, which makes a small local model faster and more accurate, and the library can grow as large as you like. Each section is used at most once per call.
+Any agent can have a `library.md` next to its `knowledge.md` (or set `AGENT_LIBRARY_FILE`). For each thing the caller says, the server finds the one or two best-matching library sections and adds them to the conversation as reference notes, so the model sees exactly the facts for that question. That keeps the always-on prompt small, which makes a small local model faster and more accurate, and the library can grow as large as you like. Each section is used at most once per call. A follow-up that names no topic ("and how long does it last?") is looked up together with the caller's previous question.
 
 ```markdown
 ## PowerTitan 3.0 (utility storage)
@@ -222,6 +222,7 @@ All settings live in `.env`; `.env.example` documents each one. Values in `.env`
 | `AGENT_EXPERTISE` | (none) | A subject the agent may also explain from general knowledge, e.g. `solar power`. Unset: only the knowledge base |
 | `AGENT_PROFILE` | (none) | Run the agent in `agents/<name>/`; same as `--agent=<name>` |
 | `AGENT_LIBRARY_FILE` | `library.md` next to the knowledge base | Knowledge library looked up per question (optional) |
+| `SOLAR_ESTIMATOR` | off | `on` gives the agent the `solar_estimate` tool: rooftop sizing for Tamil Nadu matched to Sungrow models (on for the Sunbridger agent) |
 | `TIMEZONE` | server's zone | So the agent knows the local date and time |
 | `TRANSFER_NUMBER` | (none) | Enables transfers to a person |
 | `MESSAGE_WEBHOOK_URL` | (none) | Where to POST taken messages |
@@ -275,6 +276,6 @@ To add a tool (for example, checking appointment availability in your calendar),
 
 ```bash
 npm run dev         # restart on code changes
-npm test            # 93 tests: turn-taking, barge-in, tools, safety nets, agent profiles, knowledge library, Ollama, the Twilio protocol
+npm test            # 100+ tests: turn-taking, barge-in, tools, safety nets, agent profiles, knowledge library, Ollama, the Twilio protocol
 npm run typecheck
 ```

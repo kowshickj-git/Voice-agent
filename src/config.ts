@@ -25,6 +25,7 @@ export const AGENT_SCOPED_KEYS: ReadonlySet<string> = new Set([
   'AGENT_INSTRUCTIONS_FILE',
   'AGENT_KNOWLEDGE_FILE',
   'AGENT_LIBRARY_FILE',
+  'SOLAR_ESTIMATOR',
   'STT_KEYTERMS',
   'STT_CORRECTIONS',
 ]);
@@ -179,6 +180,8 @@ export interface AgentConfig {
   knowledgeFile: string;
   /** Optional knowledge library: sections looked up per question instead of always being in the prompt. */
   libraryFile: string;
+  /** Offer the solar_estimate tool (rooftop sizing matched to Sungrow models). */
+  solarEstimator: boolean;
 }
 
 export interface CallConfig {
@@ -370,6 +373,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, root = process.
       instructionsFile: path.resolve(root, str('AGENT_INSTRUCTIONS_FILE', path.join(agentDir, 'instructions.md'))),
       knowledgeFile: path.resolve(root, str('AGENT_KNOWLEDGE_FILE', path.join(agentDir, 'knowledge.md'))),
       libraryFile: path.resolve(root, str('AGENT_LIBRARY_FILE', path.join(agentDir, 'library.md'))),
+      solarEstimator: ['1', 'true', 'on', 'yes'].includes(str('SOLAR_ESTIMATOR').toLowerCase()),
     },
     call: {
       silenceTimeoutMs: num('SILENCE_TIMEOUT_SECONDS', 10, 3, 120) * 1000,

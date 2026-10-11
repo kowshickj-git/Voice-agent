@@ -1,15 +1,20 @@
 import type { Logger } from '../logger.js';
 import type { MessageStore } from '../records.js';
+import { estimateSolar, parseAmount, type Connection, type Site, type YesNo } from './solarEstimate.js';
 import type { Tool, ToolResultBlockParam, ToolUseBlock } from './types.js';
 
 export const END_CALL = 'end_call';
 export const TRANSFER_CALL = 'transfer_call';
 export const TAKE_MESSAGE = 'take_message';
+export const SOLAR_ESTIMATE = 'solar_estimate';
 
 /** Tools that end the call's conversation with the agent; they run after the agent finishes speaking. */
 export const CALL_CONTROL_TOOLS = new Set([END_CALL, TRANSFER_CALL]);
 
 const URGENCY = ['low', 'normal', 'high'] as const;
+const CONNECTIONS = ['single_phase', 'three_phase', 'unknown'] as const;
+const YES_NO = ['yes', 'no', 'unknown'] as const;
+const SITES = ['home', 'business', 'unknown'] as const;
 
 interface FieldSpec {
   description: string;
@@ -54,10 +59,26 @@ const TOOL_FIELDS: Record<string, Record<string, FieldSpec>> = {
     message: { description: 'The message for the team, written clearly and completely so a staff member can act on it.' },
     urgency: { description: 'How urgent the request is.', enum: URGENCY, fallback: 'normal' },
   },
+  [SOLAR_ESTIMATE]: {
+    monthly_units: {
+      description:
+        'Average electricity units (kWh) the caller uses per month, as a number, or "unknown". Tamil Nadu bills cover two months: halve a two-month figure.',
+      fallback: 'unknown',
+    },
+    system_kw: { description: 'The panel size in kW the caller has in mind, as a number, or "unknown".', fallback: 'unknown' },
+    connection: { description: "The caller's electricity connection.", enum: CONNECTIONS, fallback: 'unknown' },
+    backup: { description: 'Whether they want battery backup during power cuts.', enum: YES_NO, fallback: 'unknown' },
+    site: { description: 'A home, or a business such as a shop, office, school, or factory.', enum: SITES, fallback: 'unknown' },
+    backup_load_watts: {
+      description: 'Total watts of what must run during a power cut (e.g. fans, lights, fridge, TV), as a number, or "unknown".',
+      fallback: 'unknown',
+    },
+    backup_hours: { description: 'Hours of backup they want, as a number, or "unknown".', fallback: 'unknown' },
+  },
 };
 
 /** The agent's tools, sorted by name so the request prefix (and prompt cache) is stable. */
-export function buildTools({ transferEnabled }: { transferEnabled: boolean }): Tool[] {
+export function buildTools({ transferEnabled, solarEstimator = false }: { transferEnabled: boolean; solarEstimator?: boolean }): Tool[] {
   const tools: Tool[] = [
     tool(
       END_CALL,
@@ -70,6 +91,15 @@ export function buildTools({ transferEnabled }: { transferEnabled: boolean }): T
       TOOL_FIELDS[TAKE_MESSAGE],
     ),
   ];
+  if (solarEstimator) {
+    tools.push(
+      tool(
+        SOLAR_ESTIMATE,
+        'Work out a rooftop solar estimate: system size in kW, daily, monthly, and yearly generation, number of panels and roof area, the matching Sungrow inverter and battery models, and the home subsidy. Use it whenever a caller asks what size system they need, how much it will generate, how many panels, how big a battery, or which model suits them, once you know their monthly units or the kW they want. Fill in what you know and "unknown" for the rest. Never do this arithmetic yourself. Then explain the result in one or two short spoken sentences, and never turn it into a price.',
+        TOOL_FIELDS[SOLAR_ESTIMATE],
+      ),
+    );
+  }
   if (transferEnabled) {
     tools.push(
       tool(
@@ -153,6 +183,18 @@ export async function runTool(use: ToolUseBlock, ctx: ToolContext): Promise<Tool
         ctx.log.error('Saving a message failed', err);
         return { type: 'tool_result', tool_use_id: use.id, is_error: true, content: 'The message could not be saved because of a technical problem.' };
       }
+    }
+    case SOLAR_ESTIMATE: {
+      const content = estimateSolar({
+        monthlyUnits: parseAmount(input.monthly_units),
+        systemKw: parseAmount(input.system_kw),
+        connection: input.connection as Connection,
+        backup: input.backup as YesNo,
+        site: input.site as Site,
+        backupLoadWatts: parseAmount(input.backup_load_watts),
+        backupHours: parseAmount(input.backup_hours),
+      });
+      return { type: 'tool_result', tool_use_id: use.id, content };
     }
     default:
       return { type: 'tool_result', tool_use_id: use.id, is_error: true, content: `Unknown tool: ${use.name}` };

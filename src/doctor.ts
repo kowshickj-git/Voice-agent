@@ -44,7 +44,7 @@ if (sizeWarning) warn(sizeWarning);
 async function checkModel(): Promise<void> {
   const { llm } = config;
   console.log(`\nConversation model (${describeLlm(llm)})`);
-  const tools = buildTools({ transferEnabled: Boolean(config.agent.transferNumber) });
+  const tools = buildTools({ transferEnabled: Boolean(config.agent.transferNumber), solarEstimator: config.agent.solarEstimator });
   if (llm.provider === 'ollama') {
     try {
       const capabilities = await modelCapabilities(llm.ollamaUrl, llm.model);

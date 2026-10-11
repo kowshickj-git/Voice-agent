@@ -55,7 +55,7 @@
 
 
 ## About Sungrow
-- Sungrow Power Supply was founded in 1997 by Cao Renxian, a former university teacher, in Hefei, China, where it is still based. It is listed on the Shenzhen Stock Exchange.
+- Sungrow Power Supply was founded in 1997 by Cao Renxian, a former university teacher, in Hefei, China, where it is still based. It has been listed on the Shenzhen Stock Exchange since 2011.
 - It makes inverters for solar and wind power, battery energy storage, EV chargers, floating solar systems, and hydrogen equipment. Sungrow doesn't make solar panels.
 - Sungrow was the world's number one in solar inverter shipments in 2025 (S&P Global), BloombergNEF ranks it number one for bankability, and MSCI gave it an AAA ESG rating in 2025.
 - In 2025 its revenue was about 89 billion yuan, and battery storage became its biggest business, with 43 gigawatt-hours shipped.
@@ -80,7 +80,7 @@
   - 5 kW with backup: SH5.0RS, or MG5RL for 48 V or lead-acid batteries (single-phase); SH5T (three-phase).
   - 10 kW, no backup: SG10RS (single-phase) or SG10RT-P2 (three-phase).
   - 10 kW with backup: MG10RL (single-phase); SH10T or MG10TL (three-phase).
-- Rough sizing: each kW of panels makes about 4 units a day (about 120 a month), so monthly units divided by 120 gives the kW needed. The inverter size usually matches the panel size, and Sungrow inverters can take more panel power than their rating (oversizing).
+- Rough sizing: each kW of panels makes about 4 units a day (about 120 a month), so monthly units divided by 120 gives the kW needed. Tamil Nadu home bills cover two months, so halve the units on the bill first. The inverter size usually matches the panel size, and Sungrow inverters can take more panel power than their rating (oversizing).
 
 ## Government subsidy for homes
 - Central PM Surya Ghar subsidy: 30,000 rupees per kW for the first 2 kW and 18,000 rupees for the third kW, so up to 78,000 rupees for 3 kW or more, for grid-connected homes with made-in-India (DCR) panels.

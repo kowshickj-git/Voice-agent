@@ -2,7 +2,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import type { AppConfig, SttCorrection } from '../config.js';
 import type { Logger } from '../logger.js';
 import { assistantContentForHistory, describeApiError, isAbortError } from '../llm/ClaudeBrain.js';
-import { referenceNote, type KnowledgeLibrary } from '../llm/library.js';
+import { referenceNote, type KnowledgeLibrary, type LibrarySection } from '../llm/library.js';
 import { callContextNote } from '../llm/prompt.js';
 import { CALL_CONTROL_TOOLS, invalidInputResult, runTool, TAKE_MESSAGE, TRANSFER_CALL, validateToolInput } from '../llm/tools.js';
 import { ModelRequestError, type Brain, type ContentBlockParam, type Message, type MessageParam, type ToolResultBlockParam, type ToolUseBlock } from '../llm/types.js';
@@ -206,6 +206,8 @@ export class CallSession {
   private messageTaken = false;
   /** Library sections already in the history; each is added at most once per call. */
   private readonly usedReferences = new Set<number>();
+  /** The caller's last confirmed words, for follow-up questions like "and how long does it last?". */
+  private lastCallerInput?: string;
   private ended = false;
 
   constructor(
@@ -433,6 +435,7 @@ export class CallSession {
     this.pendingNotes.splice(0, turn.consumed.notes);
     this.pendingToolResults.splice(0, turn.consumed.toolResults);
     if (turn.kind === 'caller') {
+      this.lastCallerInput = turn.input;
       this.log.info(`Caller: ${turn.input}`);
       this.record.add('caller', turn.input);
       this.transport.sendEvent({ type: 'caller', text: turn.input });
@@ -448,13 +451,26 @@ export class CallSession {
     if (this.turn === turn) this.turn = null;
   }
 
+  /**
+   * Library sections for the caller's words. A follow-up question often names
+   * no topic ("how long does that battery last?"), so when the words alone find
+   * nothing but do touch the library, the previous question is searched with them.
+   */
+  private lookUpReferences(input: string): LibrarySection[] {
+    const library = this.deps.library;
+    if (!library) return [];
+    const found = library.search(input, { exclude: this.usedReferences });
+    if (found.length || !this.lastCallerInput || library.rank(input).length === 0) return found;
+    return library.search(`${this.lastCallerInput} ${input}`, { limit: 1, exclude: this.usedReferences });
+  }
+
   private async runAgentTurn(turn: AgentTurn): Promise<void> {
     try {
       // Results of tool calls from an interrupted turn must be recorded before the next user message.
       await this.toolBarrier;
       if (turn.cancelled) return;
       const content: ContentBlockParam[] = [...this.pendingToolResults];
-      const found = turn.kind === 'caller' && this.deps.library ? this.deps.library.search(turn.input, { exclude: this.usedReferences }) : [];
+      const found = turn.kind === 'caller' ? this.lookUpReferences(turn.input) : [];
       turn.references = found.map((section) => section.id);
       if (found.length) this.log.debug(`Knowledge library: ${found.map((section) => section.title).join('; ')}`);
       const reference = found.length ? [referenceNote(found)] : [];

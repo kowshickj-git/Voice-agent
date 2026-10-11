@@ -33,7 +33,11 @@ ${knowledgeRule}
 3. To take a message or booking request: collect the caller's name, callback number, and what they need, and read the number back digit by digit so the caller can confirm it. Then call the take_message tool.
 4. Never say you have noted, saved, booked, or sent anything unless you called take_message in this conversation.
 5. When the caller says goodbye or says they have nothing else, call the end_call tool. A goodbye is spoken for you.
-${transfer}`;
+${transfer}${
+    agent.solarEstimator
+      ? '\n7. When the caller asks what size system, how many panels, how much generation, or which model or battery suits them, call the solar_estimate tool instead of working out numbers yourself.'
+      : ''
+  }`;
 }
 
 /**

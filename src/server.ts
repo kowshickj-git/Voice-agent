@@ -209,7 +209,7 @@ export function createServer(deps: ServerDeps) {
       if (grant.mode === 'web') media.enableDebugEvents();
       const callSid = grant.callSid;
       const callLog = log.child(callSid.slice(-6));
-      const tools = buildTools({ transferEnabled: Boolean(config.agent.transferNumber) });
+      const tools = buildTools({ transferEnabled: Boolean(config.agent.transferNumber), solarEstimator: config.agent.solarEstimator });
       const systemPrompt = buildSystemPrompt(config.agent, config.llm.provider);
       const brain = deps.createBrain
         ? deps.createBrain(systemPrompt, tools)

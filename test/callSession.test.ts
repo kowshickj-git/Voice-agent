@@ -251,6 +251,33 @@ test('library sections reach the model with the caller’s words, once per call'
   h.session.end({ type: 'hangup' }, 'test over');
 });
 
+test('a follow-up that names no topic is looked up with the previous question', async () => {
+  const lifeLibrary = new KnowledgeLibrary(
+    '## Home batteries\nKeywords: battery, mg\n- MG hybrids use 48 V batteries.\n\n' +
+      '## Battery life\nKeywords: battery, cycles\n- LFP batteries last 6,000 cycles.\n\n' +
+      '## Panel life\n- Panels last 25 years.\n\n## Inverter life\n- Inverters last 10 years.\n',
+  );
+  const h = createHarness([{ text: 'The MBL batteries.' }, { text: 'About 6,000 cycles.' }, { text: 'Great.' }], { deps: { library: lifeLibrary } });
+  h.session.start();
+  await greetingDone(h);
+  callerSays(h, 'Which battery goes with the MG?', 0);
+  await until(() => h.brain.requests.length === 1, 'first reply');
+  assert.match(textOf(h.brain.requests[0].at(-1)), /## Home batteries/);
+  await until(() => agentLines(h).includes('The MBL batteries.'), 'first reply spoken');
+  await sleep(50);
+  // "last" is in most sections, so alone it finds nothing; with the previous question it finds battery life.
+  callerSays(h, 'How long do they last?', 1);
+  await until(() => h.brain.requests.length === 2, 'second reply');
+  const second = textOf(h.brain.requests[1].at(-1));
+  assert.match(second, /## Battery life\n- LFP batteries last 6,000 cycles\.\]\nHow long do they last\?$/);
+  await until(() => agentLines(h).includes('About 6,000 cycles.'), 'second reply spoken');
+  await sleep(50);
+  callerSays(h, 'Yes please, thank you', 2);
+  await until(() => h.brain.requests.length === 3, 'third reply');
+  assert.equal(textOf(h.brain.requests[2].at(-1)), 'Yes please, thank you', 'small talk looks up nothing');
+  h.session.end({ type: 'hangup' }, 'test over');
+});
+
 test('known mishearings are corrected before the model reads the caller’s words', async () => {
   const config = testConfig({ STT_CORRECTIONS: 'sunburo|sun grown=Sungrow' });
   const h = createHarness([{ text: 'The MG TL.' }], { config });

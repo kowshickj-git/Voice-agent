@@ -49,7 +49,7 @@ test('skips excluded sections', () => {
 
 test('the Sunbridger library answers typical caller questions', () => {
   const library = KnowledgeLibrary.load(path.join(process.cwd(), 'agents', 'sungrow', 'library.md'));
-  assert.ok(library && library.size > 30);
+  assert.ok(library && library.size > 60);
   const expectations: [string, RegExp][] = [
     ['What is a BESS?', /battery energy storage system/],
     ['Tell me about power titan', /PowerTitan/],
@@ -59,6 +59,21 @@ test('the Sunbridger library answers typical caller questions', () => {
     ['What is the latest Sungrow inverter?', /Latest Sungrow launches/],
     ['Which is better, lithium or lead acid battery?', /Battery chemistry/],
     ['Do they make inverters in India?', /Sungrow in India/],
+    ['My inverter shows error 039', /error codes/],
+    ['My inverter stops working every afternoon', /Grid voltage tripping/],
+    ['The app says offline after I changed my wifi router', /WiNet-S/],
+    ['My generation is very low', /Low generation/],
+    ['Is Sungrow better than Huawei?', /comparing brands/],
+    ['Is a Chinese brand safe?', /Common caller doubts/],
+    ['What is the difference between SH and MG?', /SH or MG/],
+    ['Can I add a battery later?', /Adding a battery later/],
+    ['Can I run an AC and a water pump on backup?', /Appliance power/],
+    ['My EB bill is 800 units for two months', /Tamil Nadu electricity bills/],
+    ['I live in an apartment', /housing societies/],
+    ['Do you have solar pumps for farmers?', /PM-KUSUM/],
+    ['Can I limit export to zero?', /zero export/],
+    ['What happens after I order?', /steps after deciding/],
+    ['What is the tax benefit for my factory?', /tax benefits/],
   ];
   for (const [question, title] of expectations) {
     assert.match(library.search(question)[0]?.title ?? '(nothing)', title, question);
