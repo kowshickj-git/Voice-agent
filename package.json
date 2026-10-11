@@ -1,0 +1,32 @@
+{
+  "name": "voice-agent",
+  "version": "1.0.0",
+  "description": "Phone voice agent: answers calls on Twilio and talks with callers using Deepgram (speech) and Claude (conversation).",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.6"
+  },
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "start:sungrow": "tsx src/index.ts --agent=sungrow",
+    "dev": "tsx watch src/index.ts",
+    "doctor": "tsx src/doctor.ts",
+    "doctor:sungrow": "tsx src/doctor.ts --agent=sungrow",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test --test-timeout=20000 test/config.test.ts test/mulaw.test.ts test/sentenceChunker.test.ts test/speechText.test.ts test/twilioSignature.test.ts test/conversation.test.ts test/callSession.test.ts test/server.test.ts test/ollama.test.ts test/tools.test.ts test/library.test.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.133.0",
+    "dotenv": "^18.0.7",
+    "express": "^5.3.0",
+    "ws": "^8.22.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^20.19.43",
+    "@types/ws": "^8.18.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}

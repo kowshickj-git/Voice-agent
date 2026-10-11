@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Voice Agent Test Phone</title>
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --card: #ffffff;
+      --text: #15171a;
+      --muted: #646a73;
+      --line: #e3e6ea;
+      --accent: #1f9d55;
+      --accent-text: #ffffff;
+      --danger: #d64545;
+      --caller: #2463eb;
+      --caller-text: #ffffff;
+      --agent: #eef0f3;
+      --agent-text: #15171a;
+      --note: #8a6d1f;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1114;
+        --card: #181b20;
+        --text: #eceef1;
+        --muted: #9aa1ab;
+        --line: #2a2f36;
+        --accent: #2fb468;
+        --agent: #23272e;
+        --agent-text: #eceef1;
+        --caller: #3b74f0;
+        --note: #d4b45c;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    main {
+      width: 100%;
+      max-width: 640px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    header h1 { margin: 0; font-size: 20px; font-weight: 650; }
+    header p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+    }
+    .controls { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    #call {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 22px;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--accent);
+      color: var(--accent-text);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 140px;
+      justify-content: center;
+    }
+    #call[data-mode="active"] { background: var(--danger); }
+    #call:disabled { opacity: 0.6; cursor: wait; }
+    #call svg { width: 18px; height: 18px; }
+    .info { flex: 1; min-width: 180px; }
+    #status { margin: 0; font-weight: 500; }
+    #status[data-tone="error"] { color: var(--danger); }
+    #status[data-tone="live"] { color: var(--accent); }
+    #timer { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 13px; }
+    .meters { display: grid; gap: 6px; margin-top: 14px; }
+    .meter { display: grid; grid-template-columns: 52px 1fr; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+    .meter span:last-child {
+      height: 6px;
+      border-radius: 3px;
+      background: var(--line);
+      overflow: hidden;
+      position: relative;
+    }
+    .meter span:last-child::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      width: calc(var(--level, 0) * 100%);
+      background: var(--accent);
+      transition: width 90ms linear;
+    }
+    #transcript {
+      height: min(52vh, 460px);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    #empty { margin: auto; color: var(--muted); text-align: center; max-width: 360px; }
+    .row { display: flex; }
+    .row.caller { justify-content: flex-end; }
+    .row.note { justify-content: center; }
+    .bubble {
+      max-width: 82%;
+      padding: 8px 12px;
+      border-radius: 14px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      position: relative;
+    }
+    .caller .bubble { background: var(--caller); color: var(--caller-text); border-bottom-right-radius: 4px; }
+    .caller.partial .bubble { opacity: 0.55; }
+    .agent .bubble { background: var(--agent); color: var(--agent-text); border-bottom-left-radius: 4px; }
+    .agent .bubble[data-latency]::after {
+      content: "replied in " attr(data-latency);
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .agent.interrupted .bubble { opacity: 0.75; }
+    .agent.interrupted .bubble::before { content: "interrupted · "; font-size: 11px; color: var(--muted); }
+    .note .bubble { background: transparent; color: var(--note); font-size: 12px; padding: 2px 8px; }
+    .tips { color: var(--muted); font-size: 13px; margin: 0; padding-left: 18px; }
+    .tips li { margin: 2px 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1 id="title">Voice Agent</h1>
+      <p id="subtitle">Browser test phone</p>
+    </header>
+
+    <section class="card">
+      <div class="controls">
+        <button id="call" data-mode="idle" type="button">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg>
+          <span id="call-label">Start call</span>
+        </button>
+        <div class="info">
+          <p id="status">Ready. Your browser will ask to use the microphone.</p>
+          <span id="timer">00:00</span>
+        </div>
+      </div>
+      <div class="meters">
+        <div class="meter"><span>You</span><span id="mic-meter"></span></div>
+        <div class="meter"><span>Agent</span><span id="out-meter"></span></div>
+      </div>
+    </section>
+
+    <section class="card" id="transcript" aria-live="polite">
+      <p id="empty">The conversation will appear here. Use headphones so the agent doesn't hear its own voice through your speakers.</p>
+    </section>
+
+    <ul class="tips">
+      <li>Audio is converted to 8 kHz phone quality, so this sounds like a real call.</li>
+      <li>Try interrupting the agent mid-sentence, staying silent, or asking for a person.</li>
+      <li>Transcripts of every call are saved in the <code>data/calls</code> folder.</li>
+    </ul>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
